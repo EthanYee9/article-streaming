@@ -1,13 +1,16 @@
 import requests 
 from datetime import datetime
+import os 
+import dotenv 
 
 URL = "https://content.guardianapis.com/search"
 
 def inputs():
+    dotenv.load_dotenv()
     search_dict = {
         "q": None, 
         "from-date": None,
-        "api-key": "26a04467-0032-4c68-b7b2-93c78e09e549"
+        "api-key": f"{os.environ["api-key"]}"
     }
     
     print("Please enter a search term: ...")
@@ -22,7 +25,7 @@ def inputs():
     
     print("Please enter message broker ID: ...")
     message_broker_id =  input().strip()
-    print(search_dict["from-date"])
+    print(search_dict["api-key"])
     return search_dict, message_broker_id
 
 def guardian_api_call():
