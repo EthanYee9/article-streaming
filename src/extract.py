@@ -22,6 +22,7 @@ def get_search_params(search_term: str, from_date: str = None):
     search_dict = {
         "q": search_term.strip(), 
         "from-date": None,
+        "show-fields": "body",
         "api-key": f"{os.environ["api-key"]}"
     }
 
@@ -42,12 +43,11 @@ def guardian_api_call(search_dict: dict):
     URL = "https://content.guardianapis.com/search"
     response = requests.get(URL, params=search_dict)
     data = response.json()
-    print(type(data["response"]["results"][0]["webPublicationDate"]))
-    return data
+    with open("sample.json", "w") as f:
+        json.dump(data, f, indent=2)
+    return data 
+    
 
-    # with open("sample.json", "w") as f:
-    #     json.dump(data, f, indent=2)
-    # return data 
 
 def extract_api(search_term: str, message_broker_id: str, from_date: str = None):
     search_dict = get_search_params(search_term, from_date)
@@ -55,9 +55,5 @@ def extract_api(search_term: str, message_broker_id: str, from_date: str = None)
     return article_data, message_broker_id
 
 
-# guardian_api_call({
-    #     "q": "Machine learning", 
-    #     "from-date": None,
-    #     "api-key": "test"
-    # })
+extract_api("Machine learning", "guardian api", "2020/01/01")
 
