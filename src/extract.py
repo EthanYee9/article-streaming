@@ -21,6 +21,7 @@ def get_search_params(search_term: str, message_broker_id: str, from_date: str =
     search_dict = {
         "q": search_term.strip(), 
         "from-date": None,
+        "order-by": "newest",
         "api-key": f"{os.environ["api-key"]}"
     }
 
