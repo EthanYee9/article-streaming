@@ -8,7 +8,17 @@ def order_by_newest(api_data: dict):
 
     return sorted_articles
 
+def extract_relevant_fields(api_data: dict):
+    article_data = {}
 
+    for article in api_data["response"]["results"]:
+        article_data["webPublicationDate"] = article["webPublicationDate"]
+        article_data["webTitle"] = article["webTitle"]
+        article_data["webUrl"] = article["webUrl"]
+    return article_data
+
+
+# test code 
 with open("sample.json", "r") as f:
     data = json.load(f)
-order_by_newest(data)
+extract_relevant_fields(data)
