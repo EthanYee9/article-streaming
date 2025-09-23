@@ -26,7 +26,10 @@ def get_search_params(search_term: str, message_broker_id: str, from_date: str =
     }
 
     if from_date:
-        search_dict["from-date"] = datetime.strptime(from_date, '%Y/%m/%d').date()
+        try:
+            search_dict["from-date"] = datetime.strptime(from_date, '%Y/%m/%d').date()
+        except ValueError as e:
+            raise ValueError("from_date must be in the format of yyyy/mm/dd, e.g. 2001/06/17")
     
     return search_dict, message_broker_id
 
@@ -42,4 +45,4 @@ def guardian_api_call(search_term: str,  message_broker_id: str, from_date: str 
     print(data)
     return data 
 
-guardian_api_call("Machine learning", "Guardian", "2025/06/01")
+get_search_params("Machine learning", "Guardian", "2025-06-01")
