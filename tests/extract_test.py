@@ -12,11 +12,12 @@ class TestGetSearchParamsFunction:
     def test_search_dict(self):
         search_dict = get_search_params("Machine learning")
 
-        assert len(search_dict) == 3
+        assert len(search_dict) == 4
         assert isinstance(search_dict["q"], str)
         assert isinstance(search_dict["from-date"], datetime.date) or search_dict["from-date"] is None
         assert isinstance(search_dict["api-key"], str)
         assert search_dict["q"] == "Machine learning"
+        assert search_dict["show-fields"] == "body"
 
     def test_from_date_has_correct_format_and_datetime_obj(self):
         search_dict = get_search_params("Machine learning", "2025/06/01")
@@ -28,6 +29,7 @@ def mock_api_response():
     search_dict = {
         "q": "Machine learning", 
         "from-date": None,
+        "show-fields": "body",
         "api-key": "test"
     }
             
@@ -36,18 +38,21 @@ def mock_api_response():
             "status": "ok",
             "results": [
                 {
-                    "id": "technology/2025/sep/01/the-good-and-bad-of-machine-learning",
+                    "id": "technology/2025/sep/16/how-ai-is-undermining-learning-and-teaching-in-universities",
                     "type": "article",
                     "sectionId": "technology",
                     "sectionName": "Technology",
-                    "webPublicationDate": "2025-09-01T16:12:28Z",
-                    "webTitle": "The good and bad of machine learning | Letters",
-                    "webUrl": "https://www.theguardian.com/technology/2025/sep/01/the-good-and-bad-of-machine-learning",
-                    "apiUrl": "https://content.guardianapis.com/technology/2025/sep/01/the-good-and-bad-of-machine-learning",
+                    "webPublicationDate": "2025-09-16T16:22:48Z",
+                    "webTitle": "How AI is undermining learning and teaching in universities | Letter",
+                    "webUrl": "https://www.theguardian.com/technology/2025/sep/16/how-ai-is-undermining-learning-and-teaching-in-universities",
+                    "apiUrl": "https://content.guardianapis.com/technology/2025/sep/16/how-ai-is-undermining-learning-and-teaching-in-universities",
+                    "fields": {
+                    "body": "<p>In discussing generative artificial intelligence (<a href=\"https://www.theguardian.com/education/2025/sep/13/its-going-to-be-a-life-skill-educators-discuss-the-impact-of-ai-on-university-education\">\u2018It\u2019s going to be a life skill\u2019: educators discuss the impact of AI on university education, 13 September</a>) you appear to underestimate the challenges that large language model (LLM) tools such as ChatGPT present to higher education. </p>"
+                    },
                     "isHosted": False,
                     "pillarId": "pillar/news",
                     "pillarName": "News"
-                }
+      }
             ]
         }
     }
@@ -89,3 +94,5 @@ class TestGuardianApiCall:
             assert isinstance(article["isHosted"], bool)
             assert isinstance(article["pillarId"], str)
             assert isinstance(article["pillarName"], str)
+            assert isinstance(article["fields"], dict)
+            assert isinstance(article["fields"]["body"], str)
