@@ -9,13 +9,17 @@ def order_by_newest(api_data: dict):
     return sorted_articles
 
 def extract_relevant_fields(api_data: dict):
-    article_data = {}
+    articles = []
 
     for article in api_data["response"]["results"]:
+        article_data = {}
         article_data["webPublicationDate"] = article["webPublicationDate"]
         article_data["webTitle"] = article["webTitle"]
         article_data["webUrl"] = article["webUrl"]
-    return article_data
+        article_data["content_preview"] = article["fields"]["body"][:1000]
+        articles.append(article_data)
+    print(articles)
+    return articles
 
 
 # test code 
