@@ -12,7 +12,7 @@ class TestGetSearchParamsFunction:
     def test_search_dict(self):
         search_dict, broker_id = get_search_params("Machine learning", "Guardian")
 
-        assert len(search_dict) == 3
+        assert len(search_dict) == 4
         assert isinstance(search_dict["q"], str)
         assert isinstance(search_dict["from-date"], datetime.date) or search_dict["from-date"] is None
         assert isinstance(search_dict["api-key"], str)
