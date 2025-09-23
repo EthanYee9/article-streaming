@@ -49,7 +49,7 @@ def guardian_api_call(search_dict: dict):
     #     json.dump(data, f, indent=2)
     # return data 
 
-def main(search_term: str, message_broker_id: str, from_date: str = None):
+def extract_api(search_term: str, message_broker_id: str, from_date: str = None):
     search_dict = get_search_params(search_term, from_date)
     article_data = guardian_api_call(search_dict)
     return article_data, message_broker_id
