@@ -20,3 +20,5 @@ jobs:
         run: export PYTHONPATH=$(pwd)
       - name: Run checks
         run: pytest
+        env:
+          PYTHONPATH: ${{ github.workspace }}
