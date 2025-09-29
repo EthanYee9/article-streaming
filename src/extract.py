@@ -55,5 +55,5 @@ def extract_api(search_term: str, message_broker_id: str, from_date: str = None)
     return article_data, message_broker_id
 
 
-extract_api("Machine learning", "guardian api", "2020/01/01")
+extract_api("Rock climbing", "guardian api", "2020/01/01")
 
