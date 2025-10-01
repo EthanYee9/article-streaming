@@ -7,8 +7,7 @@ def mock_kinesis_client():
     with patch("src.streaming_script.boto3.client") as mock_client:
         mock_instance = MagicMock()
         mock_client.return_value = mock_instance
-    
-    yield mock_instance
+        yield mock_instance
 
 class TestPublishToKinesis:
     def test_0_failed_records(self, mock_kinesis_client):
