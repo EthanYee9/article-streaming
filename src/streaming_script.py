@@ -118,4 +118,4 @@ def stream_articles(search_term: str, message_broker_id: str, from_date: str = N
     transformed_data = transform_data(article_data)
     publish_to_kinesis(transformed_data, message_broker_id)
 
-stream_articles("Machine Learning", "Guardian_content", "2020/01/01")
+# stream_articles("Machine Learning", "Guardian_content", "2020/01/01")
