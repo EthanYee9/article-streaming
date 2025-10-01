@@ -1,7 +1,7 @@
 import pytest 
 import datetime
 from unittest.mock import patch, MagicMock
-from src.extract import get_search_params, guardian_api_call
+from src.streaming_script import get_search_params, guardian_api_call
 
 class TestGetSearchParamsFunction:
     def test_returns_search_dict_and_broker_id(self):

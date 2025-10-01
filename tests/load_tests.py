@@ -1,6 +1,6 @@
 import pytest 
 from unittest.mock import patch, MagicMock
-from src.extract import publish_to_kinesis
+from src.streaming_script import publish_to_kinesis
 
 @pytest.fixture
 def mock_kinesis_client():

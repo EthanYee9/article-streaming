@@ -1,5 +1,5 @@
 import pytest 
-from src.transform import order_by_newest, extract_relevant_fields
+from src.streaming_script import order_by_newest, extract_relevant_fields
 
 class TestOrderByNewest:
     def test_returns_a_list_of_dict(self):
