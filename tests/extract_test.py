@@ -1,7 +1,7 @@
 import pytest 
 import datetime
 from unittest.mock import patch, MagicMock
-from src.extract import get_search_params, guardian_api_call
+from src.streaming_script import get_search_params, guardian_api_call
 
 class TestGetSearchParamsFunction:
     def test_returns_search_dict_and_broker_id(self):
@@ -56,8 +56,8 @@ def mock_api_response():
             ]
         }
     }
-        
-    with patch("src.extract.requests.get") as mock_get:
+    
+    with patch("src.streaming_script.requests.get") as mock_get:
         mock_response = MagicMock()
         mock_response.json.return_value = fake_data
         mock_get.return_value = mock_response
