@@ -1,4 +1,5 @@
 import pytest 
+import json
 from src.streaming_script import order_by_newest, extract_relevant_fields
 
 class TestOrderByNewest:
@@ -133,10 +134,13 @@ class TestExtractRelevantFields:
         ]
         output = extract_relevant_fields(input)
         for i in output:
-            assert isinstance(i["webPublicationDate"], str)
-            assert isinstance(i["webTitle"], str)
-            assert isinstance(i["webUrl"], str)
-            assert isinstance(i["content_preview"], str)
+            data = json.loads(i["Data"])
+            i["Data"] = data
+            assert isinstance(i["Data"]["webPublicationDate"], str)
+            assert isinstance(i["Data"]["webTitle"], str)
+            assert isinstance(i["Data"]["webUrl"], str)
+            assert isinstance(i["Data"]["content_preview"], str)
+            assert isinstance(i["PartitionKey"], str)
         
     def test_content_preview_field_less_than_1000_char(self):
         input = [
@@ -175,4 +179,7 @@ class TestExtractRelevantFields:
     ]
         output = extract_relevant_fields(input)
         for i in output:
-            assert len(i["content_preview"]) <=1000
+            data = json.loads(i["Data"])
+            i["Data"] = data
+            assert len(i["Data"]["content_preview"]) <=1000
+    
