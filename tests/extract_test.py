@@ -1,4 +1,4 @@
-import pytest 
+import pytest
 import datetime
 from unittest.mock import patch, MagicMock
 from src.streaming_script import get_search_params, guardian_api_call

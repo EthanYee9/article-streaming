@@ -100,7 +100,7 @@ def transform_data(api_data: dict):
 #-----------
 
 def publish_to_kinesis(article_data: json, broker_id: str):
-    client = boto3.client('kinesis')
+    client = boto3.client('kinesis', region_name="eu-west-2")
     
     response = client.put_records(
         Records = article_data,
@@ -118,4 +118,4 @@ def stream_articles(search_term: str, message_broker_id: str, from_date: str = N
     transformed_data = transform_data(article_data)
     publish_to_kinesis(transformed_data, message_broker_id)
 
-stream_articles("Machine Learning", "Guardian_content", "2020/01/01")
+# stream_articles("Machine Learning", "Guardian_content", "2020/01/01")
