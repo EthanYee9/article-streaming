@@ -56,8 +56,8 @@ def mock_api_response():
             ]
         }
     }
-        
-    with patch("src.extract.requests.get") as mock_get:
+    
+    with patch("src.streaming_script.requests.get") as mock_get:
         mock_response = MagicMock()
         mock_response.json.return_value = fake_data
         mock_get.return_value = mock_response

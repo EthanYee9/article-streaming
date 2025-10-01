@@ -4,7 +4,7 @@ from src.streaming_script import publish_to_kinesis
 
 @pytest.fixture
 def mock_kinesis_client():
-    with patch("src.extract.boto3.client") as mock_client:
+    with patch("src.streaming_script.boto3.client") as mock_client:
         mock_instance = MagicMock()
         mock_client.return_value = mock_instance
     
