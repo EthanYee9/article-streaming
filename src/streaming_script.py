@@ -12,7 +12,7 @@ import boto3
 # dotenv.load_dotenv()
 
 def retrieve_api_key():
-    client = boto3.client("secretmanager")
+    client = boto3.client("secretsmanager")
     response = client.get_secret_value(
         SecretId = "guardian_api_key"
     )
