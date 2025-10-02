@@ -5,12 +5,12 @@ from src.streaming_script import get_search_params, guardian_api_call
 
 class TestGetSearchParamsFunction:
     def test_returns_search_dict_and_broker_id(self):
-        search_dict = get_search_params("Machine learning ", "2025/06/01")
+        search_dict = get_search_params("Machine learning ", "api_key","2025/06/01")
         
         assert isinstance(search_dict, dict) 
 
     def test_search_dict(self):
-        search_dict = get_search_params("Machine learning")
+        search_dict = get_search_params("Machine learning", "api_key")
 
         assert len(search_dict) == 4
         assert isinstance(search_dict["q"], str)
@@ -20,7 +20,7 @@ class TestGetSearchParamsFunction:
         assert search_dict["show-fields"] == "body"
 
     def test_from_date_has_correct_format_and_datetime_obj(self):
-        search_dict = get_search_params("Machine learning", "2025/06/01")
+        search_dict = get_search_params("Machine learning", "api_key","2025/06/01")
 
         assert search_dict["from-date"].strftime("%Y/%m/%d")
 

@@ -1,7 +1,8 @@
 data "archive_file" "lambda_streaming_layer" {
-  type        = "zip"
-  source_file = "${path.module}/../src/layer/"
-  output_path = "${path.module}/../src/layer.zip"
+  type             = "zip"
+  output_file_mode = "0666"
+  source_dir       = "${path.module}/../src/lambda_layer"
+  output_path      = "${path.module}/../src/lambda_layer.zip"
 }
 
 resource "aws_lambda_layer_version" "extract_dependencies_layer" {
@@ -17,9 +18,10 @@ data "archive_file" "lambda_stream_script" {
 }
 
 resource "aws_lambda_function" "streaming_lambda" {
-  filename      = data.archive_file.streaming_script.output_path
-  function_name = "Streaming lambda"
+  filename      = data.archive_file.lambda_stream_script.output_path
+  function_name = "Streaming_lambda"
   role          = aws_iam_role.iam_for_lambda.arn
+  handler       = "streaming_script.stream_articles"
   runtime       = "python3.13"
   layers        = [aws_lambda_layer_version.extract_dependencies_layer.arn]
 }

@@ -9,9 +9,17 @@ import boto3
 #-EXTRACT API-
 #-------------
 
-dotenv.load_dotenv()
+# dotenv.load_dotenv()
 
-def get_search_params(search_term: str, from_date: str = None):
+def retrieve_api_key():
+    client = boto3.client("secretsmanager")
+    response = client.get_secret_value(
+        SecretId = "guardian_api_key"
+    )
+    parsed_secret = json.loads(response["SecretString"])
+    return parsed_secret["api_key"]
+
+def get_search_params(search_term: str, api_key, from_date: str = None):
     """
     Create a search dictionary and broker ID for Guardian API.
 
@@ -28,7 +36,7 @@ def get_search_params(search_term: str, from_date: str = None):
         "q": search_term.strip(), 
         "from-date": None,
         "show-fields": "body",
-        "api-key": f"{os.environ["api-key"]}"
+        "api-key": api_key
     }
 
     if from_date:
@@ -55,7 +63,8 @@ def guardian_api_call(search_dict: dict):
 
 
 def extract_api(search_term: str, from_date: str = None):
-    search_dict = get_search_params(search_term, from_date)
+    api_key = retrieve_api_key()
+    search_dict = get_search_params(search_term, api_key, from_date)
     article_data = guardian_api_call(search_dict)
     return article_data
 
