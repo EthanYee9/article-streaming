@@ -25,7 +25,8 @@ data "aws_iam_policy_document" "kinesis_data_policy_doc" {
       "kinesis:DescribeStreamSummary",
       "kinesis:ListShards",
       "kinesis:PutRecord",
-      "kinesis:PutRecords"
+      "kinesis:PutRecords",
+      "secretsmanager:GetSecretValue"
     ]
     resources = [aws_kinesis_stream.Guardian_content.arn]
   }
