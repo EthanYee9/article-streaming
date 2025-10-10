@@ -1,7 +1,8 @@
 import pytest
 import datetime
+import json
 from unittest.mock import patch, MagicMock
-from src.streaming_script import get_search_params, guardian_api_call
+from src.streaming_script import get_search_params, guardian_api_call, retrieve_api_key
 
 class TestGetSearchParamsFunction:
     def test_returns_search_dict_and_broker_id(self):
@@ -96,3 +97,24 @@ class TestGuardianApiCall:
             assert isinstance(article["pillarName"], str)
             assert isinstance(article["fields"], dict)
             assert isinstance(article["fields"]["body"], str)
+
+@pytest.fixture
+def mock_secret_manager_client():
+    with patch("src.streaming_script.boto3.client") as mock_client:
+        mock_instance = MagicMock()
+        mock_client.return_value = mock_instance
+        yield mock_instance
+
+class TestRetrieveApiKey:
+    def test_returns_key(self, mock_secret_manager_client):
+        fake_key = "26a07767-1132-1c68-b3b2-83c78e09r559"
+
+        mock_secret_manager_client.get_secret_value.return_value = {
+            "SecretString": json.dumps({"api_key": fake_key})
+        }
+
+        response = retrieve_api_key()
+
+        assert len(response) == 36 
+        assert isinstance(response, str)
+        assert response == fake_key
