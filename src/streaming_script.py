@@ -1,15 +1,12 @@
 import requests 
 from datetime import datetime
-import os 
-import dotenv 
 import json
 import boto3
+from lxml import html
 
 #-------------
 #-EXTRACT API-
 #-------------
-
-# dotenv.load_dotenv()
 
 def retrieve_api_key():
     client = boto3.client("secretsmanager")
@@ -31,9 +28,11 @@ def get_search_params(search_term: str, api_key, from_date: str = None):
     Returns:
         dictionary: search_dict
     """
-        
+    
+    stripped_search_term = search_term.strip()
+
     search_dict = {
-        "q": search_term.strip(), 
+        "q": stripped_search_term, 
         "from-date": None,
         "show-fields": "body",
         "api-key": api_key
@@ -89,7 +88,9 @@ def extract_relevant_fields(api_data: dict):
         article_data["webPublicationDate"] = article["webPublicationDate"]
         article_data["webTitle"] = article["webTitle"]
         article_data["webUrl"] = article["webUrl"]
-        article_data["content_preview"] = article["fields"]["body"][:1000]
+        tree = html.fromstring(article["fields"]["body"][:1000])
+        article_preview = tree.text_content()
+        article_data["content_preview"] = article_preview
         kinesis_record["Data"] = json.dumps(article_data)
         kinesis_record["PartitionKey"] = article["sectionName"]
         articles.append(kinesis_record)
@@ -119,7 +120,7 @@ def publish_to_kinesis(article_data: json, broker_id: str):
     return response
 
 #----------------------
-#-Orchistrate function-
+#-Orchestrate function-
 #----------------------
 
 def stream_articles(search_term: str, message_broker_id: str, from_date: str = None):
@@ -127,4 +128,4 @@ def stream_articles(search_term: str, message_broker_id: str, from_date: str = N
     transformed_data = transform_data(article_data)
     publish_to_kinesis(transformed_data, message_broker_id)
 
-# stream_articles("Machine Learning", "Guardian_content", "2020/01/01")
+stream_articles("Rock Climbing", "Guardian_content", "2020/01/01")
