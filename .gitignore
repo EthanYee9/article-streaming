@@ -4,3 +4,5 @@ __pycache__/
 *.tfstate*
 src/lambda_layer/python/
 src/lambda_layer.zip
+from a shard
+kinesis get-records --shard-iterator --region eu-west-2
