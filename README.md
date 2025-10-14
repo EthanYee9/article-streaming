@@ -71,16 +71,16 @@ After invoking the Lambda function, within your ``Guardian_content`` data stream
 - webPublicationDate
 - webTitle
 - webUrl
-- content_preview: containg the first 1000 characters
+- content_preview: containg the first ~1000 characters
 
 Example:
 
 ```
 {
-    "webPublicationDate": "2025-08-10T16:39:47Z",
-    "webTitle": "Learning to live with the torture of tinnitus | Letters",
-    "webUrl": "https://www.theguardian.com/society/2025/aug/10/learning-to-live-with-the-torture-of-tinnitus",
-    "content_preview": "One night, I heard a dripping tap. I asked my husband to check all the taps – upstairs bathroom, downstairs toilet, the kitchen. He assured me there were no dripping taps." 
+    "webPublicationDate": "2025-06-25T09:11:34Z",
+    "webTitle": "UK graduates facing worst job market since 2018 amid rise of AI, says Indeed",
+    "webUrl": "https://www.theguardian.com/money/2025/jun/25/uk-university-graduates-toughest-job-market-rise-of-ai",
+    "content_preview": "University graduates in the UK are facing the toughest job market since 2018, figures suggest, as employers pause hiring and use AI to cut costs, according to analysts. The number of roles advertised for recent graduates is down 33% compared with last year and is at the lowest level in seven years, according to the job search site Indeed. Overall job postings as of mid-June were 5% lower compared with the end of March, as the broader job market struggles in the face of higher taxes for employers and minimum wage changes introduced from April. It means the UK is an outlier compared with the US and its peers in Europe, as it is the only economy with fewer job openings available than before the "
 }
 ```
 
