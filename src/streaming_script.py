@@ -28,11 +28,9 @@ def get_search_params(search_term: str, api_key, from_date: str = None):
     Returns:
         dictionary: search_dict
     """
-    
-    stripped_search_term = search_term.strip()
 
     search_dict = {
-        "q": stripped_search_term, 
+        "q": search_term.strip(), 
         "from-date": None,
         "show-fields": "body",
         "api-key": api_key
@@ -55,8 +53,6 @@ def guardian_api_call(search_dict: dict):
     URL = "https://content.guardianapis.com/search"
     response = requests.get(URL, params=search_dict)
     data = response.json()
-    with open("sample.json", "w") as f:
-        json.dump(data, f, indent=2)
     return data 
     
 
@@ -74,9 +70,6 @@ def extract_api(search_term: str, from_date: str = None):
 def order_by_newest(api_data: dict):
     articles = api_data["response"]["results"]
     sorted_articles = sorted(articles, key=lambda x: x["webPublicationDate"], reverse=True)
-    with open("sorted.json", "w") as f:
-        json.dump(sorted_articles, f, indent=2)
-
     return sorted_articles
 
 def extract_relevant_fields(api_data: dict):
@@ -88,8 +81,11 @@ def extract_relevant_fields(api_data: dict):
         article_data["webPublicationDate"] = article["webPublicationDate"]
         article_data["webTitle"] = article["webTitle"]
         article_data["webUrl"] = article["webUrl"]
+        
+        # convert html code to string
         tree = html.fromstring(article["fields"]["body"][:1000])
         article_preview = tree.text_content()
+
         article_data["content_preview"] = article_preview
         kinesis_record["Data"] = json.dumps(article_data)
         kinesis_record["PartitionKey"] = article["sectionName"]
@@ -100,9 +96,6 @@ def extract_relevant_fields(api_data: dict):
 def transform_data(api_data: dict):
     sorted_articles = order_by_newest(api_data)
     data = extract_relevant_fields(sorted_articles)
-    with open("transform.json", "w") as f:
-        json.dump(data, f, indent=2)
-    
     return data 
 
 #-----------
@@ -123,9 +116,19 @@ def publish_to_kinesis(article_data: json, broker_id: str):
 #-Orchestrate function-
 #----------------------
 
-def stream_articles(search_term: str, message_broker_id: str, from_date: str = None):
+def stream_articles(event_dict: dict, context=None):
+    search_term = event_dict["search term"]   
+    message_broker_id = event_dict["message_broker_id"]   
+    from_date = event_dict["from_date"]  
+
     article_data = extract_api(search_term, from_date)
     transformed_data = transform_data(article_data)
     publish_to_kinesis(transformed_data, message_broker_id)
 
-stream_articles("Rock Climbing", "Guardian_content", "2020/01/01")
+# stream_articles(
+    # {
+    #     "search term": "running", 
+    #     "message_broker_id": "Guardian_content",
+    #     "from_date": "2020/01/01"
+    # }
+# )
