@@ -2,3 +2,5 @@ venv
 __pycache__/
 **/.terraform*
 *.tfstate*
+src/lambda_layer/python/
+src/lambda_layer.zip
