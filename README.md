@@ -63,7 +63,16 @@ terraform apply
 ```
 *Performs the changes shown in the plan, and asks for the Guardian API key.* 
 
-### Invoking From Command Line
+## Invoking From Command Line
+To invoke the lambda function from command line:
+
+```
+aws lambda invoke \
+  --function-name Streaming_lambda \
+  --cli-binary-format raw-in-base64-out \
+  --payload '{"search term": "<placeholder>", "message_broker_id": "Guardian_content", "from_date": "yyyy/mm/dd"}' \
+  response.json
+```
 
 ## Expected Outputs
 After invoking the Lambda function, within your ``Guardian_content`` data stream in Kinesis, you should see records with a json containing:
