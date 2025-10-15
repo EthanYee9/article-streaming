@@ -85,7 +85,7 @@ class TestGuardianApiCall:
         search_dict, mock_get = mock_api_response
         guardian_api_call(search_dict)
         mock_get.assert_called_once_with(
-            "https://content.guardianapis.com/search", params=search_dict
+            "https://content.guardianapis.com/search", params=search_dict, timeout=10
         )
 
     def test_check_result_fields_data_type(self, mock_api_response):
@@ -123,7 +123,7 @@ class TestRetrieveApiKey:
             "SecretString": json.dumps({"api_key": fake_key})
         }
 
-        response = retrieve_api_key()
+        response = retrieve_api_key("Guardian_content")
 
         assert len(response) == 36
         assert isinstance(response, str)
