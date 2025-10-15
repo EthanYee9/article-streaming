@@ -52,7 +52,7 @@ def get_search_params(search_term: str, api_key, from_date: str = None):
     if from_date:
         try:
             search_dict["from-date"] = datetime.strptime(from_date, "%Y/%m/%d").date()
-        except ValueError as e:
+        except ValueError:
             raise ValueError(
                 "from_date must be in the format of yyyy/mm/dd, e.g. 2001/06/17"
             )
@@ -72,7 +72,7 @@ def guardian_api_call(search_dict: dict):
     """
 
     URL = "https://content.guardianapis.com/search"
-    response = requests.get(URL, params=search_dict)
+    response = requests.get(URL, params=search_dict, timeout=10)
     data = response.json()
     return data
 
@@ -242,12 +242,3 @@ def stream_articles(event_dict: dict, context=None):
     article_data = extract_api(search_term, message_broker_id, from_date)
     transformed_data = transform_data(article_data)
     publish_to_kinesis(transformed_data, message_broker_id)
-
-
-# stream_articles(
-#     {
-#         "search term": "job market",
-#         "message_broker_id": "Guardian_content",
-#         "from_date": "2020/01/01"
-#     }
-# )
