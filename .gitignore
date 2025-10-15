@@ -8,3 +8,4 @@ from a shard
 kinesis get-records --shard-iterator --region eu-west-2
 terraform/deployments/
 .terraform/
+.env
