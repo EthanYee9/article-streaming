@@ -72,7 +72,7 @@ def guardian_api_call(search_dict: dict):
     """
 
     URL = "https://content.guardianapis.com/search"
-    response = requests.get(URL, params=search_dict)
+    response = requests.get(URL, params=search_dict,  timeout=10)
     data = response.json()
     return data
 
