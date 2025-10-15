@@ -8,9 +8,11 @@ This project is an application which retrieves articles from the Guardian API an
 ## Tech Stack 
 **Language:** Python, Terraform 
 
-**Libraries:** Boto3
+**Libraries:** Boto3, lxml
 
 **Cloud Services:** AWS (Lambda, Kinesis, Secrets Manager)
+
+**CI/CD**: GitHub Actions 
 
 **Testing:** Pytest
 
