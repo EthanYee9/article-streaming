@@ -23,7 +23,7 @@ jobs:
       - name: Run Code Quality & Security Checks
         run: |
           black --check . --exclude tests/
-          flake8 . --exclude=tests
+          flake8 . --exclude=tests 
           bandit -r .
           pip-audit
 
