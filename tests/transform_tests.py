@@ -1,5 +1,6 @@
 import pytest 
 import json
+import re
 from src.streaming_script import order_by_newest, extract_relevant_fields
 
 class TestOrderByNewest:
@@ -71,34 +72,9 @@ class TestOrderByNewest:
         print("expected: ---->", expected)
         assert dates == expected 
 
-class TestExtractRelevantFields:
-    def test_extract_relevant_fields_returns_a_list_of_dict(self):
-        input = [
-            {
-                "id": "music/2025/sep/21/busted-vs-mcfly-review-millenial-rivals-let-the-pop-rock-punches-fly",
-                "type": "article",
-                "sectionId": "music",
-                "sectionName": "Music",
-                "webPublicationDate": "2025-09-21T16:00:21Z",
-                "webTitle": "Busted vs McFly review \u2013 millennial \u2018rivals\u2019 let the pop-rock punches fly",
-                "webUrl": "https://www.theguardian.com/music/2025/sep/21/busted-vs-mcfly-review-millenial-rivals-let-the-pop-rock-punches-fly",
-                "apiUrl": "https://content.guardianapis.com/music/2025/sep/21/busted-vs-mcfly-review-millenial-rivals-let-the-pop-rock-punches-fly",
-                "fields": {
-                "body": "<p>The last time Busted and McFly shared a stage a decade ago they were conjoined as McBusted, an unholy union that resulted in two arena tours and an album. Now they\u2019ve reconnected as pop-rock foes, with the \u201crivalry\u201d \u2013 both bands were formed by the same management company, with McFly arriving three years after Busted in 2003 \u2013 cemented by an opening video segment based on Baz Luhrmann\u2019s Romeo + Juliet that pits them as \u201cstar crossed bands\u201d living in \u201cfair Britannia\u201d. Millennial couples in rival Team Busted and Team McFly T-shirts, meanwhile, eye each other up nervously.</p> <p>A surprisingly buff McFly open proceedings, anchoring their rock credentials with 2023\u2019s Where Did All the Guitars Go?, an embarrassing \u201creal music\u201d diatribe about the \u201cshit\u201d on the radio. But while there are some other duds in their 12 song set \u2013 Red is a Kidz Bop version of U2; the faux-breezy pop of Happiness falls into that \u201cshit\u201d category \u2013 they also have a handful of top-tier bops (Obviously, All About You, a raucous One For the Radio), and enough musical variety, to keep even the patient Busted fans happy.</p>"
-                },
-                "isHosted": False,
-                "pillarId": "pillar/arts",
-                "pillarName": "Arts"
-            }
-        ]
-        output = extract_relevant_fields(input)
-        assert isinstance(output, list)
-
-        for article in output:
-            assert isinstance(article, dict)
-    
-    def test_relevant_fields_present(self):
-        input = [
+@pytest.fixture 
+def dictionary_input():
+    input = [
             {
                 "id": "music/2025/sep/21/busted-vs-mcfly-review-millenial-rivals-let-the-pop-rock-punches-fly",
                 "type": "article",
@@ -132,7 +108,18 @@ class TestExtractRelevantFields:
                 "pillarName": "News"
             }
         ]
-        output = extract_relevant_fields(input)
+    return input
+
+class TestExtractRelevantFields:
+    def test_extract_relevant_fields_returns_a_list_of_dict(self, dictionary_input):
+        output = extract_relevant_fields(dictionary_input)
+        assert isinstance(output, list)
+
+        for article in output:
+            assert isinstance(article, dict)
+    
+    def test_relevant_fields_present(self, dictionary_input):
+        output = extract_relevant_fields(dictionary_input)
         for i in output:
             data = json.loads(i["Data"])
             i["Data"] = data
@@ -142,44 +129,18 @@ class TestExtractRelevantFields:
             assert isinstance(i["Data"]["content_preview"], str)
             assert isinstance(i["PartitionKey"], str)
         
-    def test_content_preview_field_less_than_1000_char(self):
-        input = [
-        {
-            "id": "music/2025/sep/21/busted-vs-mcfly-review-millenial-rivals-let-the-pop-rock-punches-fly",
-            "type": "article",
-            "sectionId": "music",
-            "sectionName": "Music",
-            "webPublicationDate": "2025-09-21T16:00:21Z",
-            "webTitle": "Busted vs McFly review \u2013 millennial \u2018rivals\u2019 let the pop-rock punches fly",
-            "webUrl": "https://www.theguardian.com/music/2025/sep/21/busted-vs-mcfly-review-millenial-rivals-let-the-pop-rock-punches-fly",
-            "apiUrl": "https://content.guardianapis.com/music/2025/sep/21/busted-vs-mcfly-review-millenial-rivals-let-the-pop-rock-punches-fly",
-            "fields": {
-            "body": "<p>The last time Busted and McFly shared a stage a decade ago they were conjoined as McBusted, an unholy union that resulted in two arena tours and an album. Now they\u2019ve reconnected as pop-rock foes, with the \u201crivalry\u201d \u2013 both bands were formed by the same management company, with McFly arriving three years after Busted in 2003 \u2013 cemented by an opening video segment based on Baz Luhrmann\u2019s Romeo + Juliet that pits them as \u201cstar crossed bands\u201d living in \u201cfair Britannia\u201d. Millennial couples in rival Team Busted and Team McFly T-shirts, meanwhile, eye each other up nervously.</p> <p>A surprisingly buff McFly open proceedings, anchoring their rock credentials with 2023\u2019s Where Did All the Guitars Go?, an embarrassing \u201creal music\u201d diatribe about the \u201cshit\u201d on the radio. But while there are some other duds in their 12 song set \u2013 Red is a Kidz Bop version of U2; the faux-breezy pop of Happiness falls into that \u201cshit\u201d category \u2013 they also have a handful of top-tier bops (Obviously, All About You, a raucous One For the Radio), and enough musical variety, to keep even the patient Busted fans happy.</p>"
-            },
-            "isHosted": False,
-            "pillarId": "pillar/arts",
-            "pillarName": "Arts"
-        },
-        {
-            "id": "world/2025/sep/18/chinas-temple-economy-in-the-spotlight-as-scandals-rock-influential-religious-leaders",
-            "type": "article",
-            "sectionId": "world",
-            "sectionName": "World news",
-            "webPublicationDate": "2025-09-18T02:20:10Z",
-            "webTitle": "China\u2019s \u2018temple economy\u2019 in the spotlight as scandals rock influential religious leaders ",
-            "webUrl": "https://www.theguardian.com/world/2025/sep/18/chinas-temple-economy-in-the-spotlight-as-scandals-rock-influential-religious-leaders",
-            "apiUrl": "https://content.guardianapis.com/world/2025/sep/18/chinas-temple-economy-in-the-spotlight-as-scandals-rock-influential-religious-leaders",
-            "fields": {
-            "body": "<p>For a religious leader, the allegations were scandalous. Mistresses, illegitimate children, embezzlement. But in 2015, the head abbott of Shaolin monastery, the cradle of Zen Buddhism and kung-fu in China, was untouchable. Shi Yongxin, the so-called \u201cCEO monk\u201d who turned the 1,500-year-old monastery into a commercial empire worth hundreds of millions of yuan, held firm. Soon he was cleared of all charges.</p> <p>But 10 years later, the 60-year-old monk was not so lucky. In July, not long after Shi returned from a trip to the Vatican to meet the late Pope Francis, the Shaolin Temple released a statement saying that <a href=\"https://www.theguardian.com/world/2025/jul/28/shaolin-temple-abbot-monk-investigation-embezzlement-ntwnfb\">he was being investigated</a> for allegedly misappropriating funds and for fathering illegitimate children with multiple mistresses. Less than a fortnight later he was dismissed and stripped of his monkhood. He has not been heard from since.<strong> </strong></p> <p>Shi\u2019s downfall, for accusations similar to those made \u2013 <a href=\"https://www.theguardian.com/world/2015/aug/02/shaolin-abbot-under-investigation-after-sex-and-claims-surface-online\">and survived \u2013 in 2015</a>, was the most high profile in a series of scandals that have rocked China\u2019s Buddhist temples in recent months.</p> "
-            },
-            "isHosted": False,
-            "pillarId": "pillar/news",
-            "pillarName": "News"
-        }
-    ]
-        output = extract_relevant_fields(input)
+    def test_content_preview_field_less_than_1000_char(self, dictionary_input):
+        output = extract_relevant_fields(dictionary_input)
         for i in output:
             data = json.loads(i["Data"])
             i["Data"] = data
             assert len(i["Data"]["content_preview"]) <=1000
-    
+
+    def test_html_content_preview_coverted_to_string(self, dictionary_input):
+        output = extract_relevant_fields(dictionary_input)
+        for i in output:
+            data = json.loads(i["Data"])
+            i["Data"] = data
+            assert not bool(re.search(r"<[^>]+>", i["Data"]["content_preview"]))
+            assert not bool(re.search(r"\\u[0-9a-fA-F]{4}", i["Data"]["content_preview"]))
+            
