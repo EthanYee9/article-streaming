@@ -3,3 +3,7 @@ pytest
 pytest-testdox
 boto3
 lxml
+flake8
+black
+pip-audit
+bandit
