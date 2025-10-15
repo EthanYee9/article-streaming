@@ -139,8 +139,7 @@ class TestExtractRelevantFields:
     def test_html_content_preview_coverted_to_string(self, dictionary_input):
         output = extract_relevant_fields(dictionary_input)
         for i in output:
-            data = json.loads(i["Data"])
-            i["Data"] = data
-            assert not bool(re.search(r"<[^>]+>", i["Data"]["content_preview"]))
-            assert not bool(re.search(r"\\u[0-9a-fA-F]{4}", i["Data"]["content_preview"]))
+            data = i["Data"]
+            assert not bool(re.search(r"<[^>]+>", data))
+            assert not bool(re.search(r"\\u[0-9a-fA-F]{4}", data))
             
