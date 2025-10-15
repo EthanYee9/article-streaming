@@ -52,7 +52,7 @@ def get_search_params(search_term: str, api_key, from_date: str = None):
     if from_date:
         try:
             search_dict["from-date"] = datetime.strptime(from_date, "%Y/%m/%d").date()
-        except ValueError as e:
+        except ValueError:
             raise ValueError(
                 "from_date must be in the format of yyyy/mm/dd, e.g. 2001/06/17"
             )
