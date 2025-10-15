@@ -5,7 +5,7 @@ variable "guardian_api_key" {
 }
 
 resource "aws_secretsmanager_secret" "guardian_api_key" {
-  name                    = "guardian_api_key"
+  name                    = "Guardian_content"
   recovery_window_in_days = 0
 }
 
