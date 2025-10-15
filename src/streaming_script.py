@@ -242,12 +242,3 @@ def stream_articles(event_dict: dict, context=None):
     article_data = extract_api(search_term, message_broker_id, from_date)
     transformed_data = transform_data(article_data)
     publish_to_kinesis(transformed_data, message_broker_id)
-
-
-# stream_articles(
-#     {
-#         "search term": "job market",
-#         "message_broker_id": "Guardian_content",
-#         "from_date": "2020/01/01"
-#     }
-# )
