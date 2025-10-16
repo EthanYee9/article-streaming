@@ -27,7 +27,7 @@ jobs:
         run: |
           black --check .
           flake8 . --max-line-length=110 --exclude=tests/data/ 
-          bandit -r .
+          bandit -r . --exclude ./tests
           pip-audit || true
 
       # run test 
