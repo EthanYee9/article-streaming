@@ -25,7 +25,7 @@ jobs:
       # Quality & Security Checks
       - name: Run Code Quality & Security Checks
         run: |
-          black --check 
+          black --check .
           flake8 . --max-line-length=90 --exclude=tests/data/ 
           bandit -r . --exclude ./tests
           pip-audit || true
