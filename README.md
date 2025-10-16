@@ -2,8 +2,15 @@
 
 ## Overview
 
-This project is an application which retrieves articles from the Guardian API and publishs it to a message broker (AWS Kinesis) so that it can be consumed and analysed by other applications. The application accepts a search term (e.g. "machine learning"), an optional
-"date_from" field, and a reference to a message broker. It will use the search terms to search for articles in the Guardian API and posts details of up to ten hits to the message broker.
+This project is an AWS Lambda application which retrieves articles from the Guardian API and publishs it to a message broker (AWS Kinesis) so that it can be consumed and analysed by other applications. 
+
+The application accepts a search term (e.g. "machine learning"), an optional "date_from" field, and a reference to a message broker. It will use the search terms to search for articles in the Guardian API and posts details of up to ten hits to the message broker.
+
+Sensitive information such as the Guardian API key is securely managed using AWS Secrets Manager. This ensures that no credentials are hardcoded or stored in plain text, following best practices for cloud security.
+
+All AWS resources including the Lambda function, IAM roles, and Kinesis stream are provisioned using Terraform.
+
+This repository uses GitHub Actions to automatically test and validate all code changes before they are merged into the main branch.
 
 ## Tech Stack 
 **Language:** Python, Terraform 
