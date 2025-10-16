@@ -14,7 +14,7 @@ def retrieve_api_key(message_broker_id):
     Retrieves api key saved to AWS Secrets Manager
 
     Parameters:
-    message broker id (str): message broker identifier used to search for api key.
+    message broker id (str): message broker id used to search for api key.
 
     Returns:
         string: The API key associated with the given message broker.
@@ -79,15 +79,15 @@ def guardian_api_call(search_dict: dict):
 
 def extract_api(search_term: str, message_broker_id: str, from_date: str = None):
     """
-    Orchestrates a Guardian API request to retrieve articles based on a search term and optional date.
+    Orchestrates an API request to retrieve articles based on a search term and optional date.
 
     Parameters:
         search_term (str): The keyword(s) to search for in Guardian articles.
-        message_broker_id (str): Identifier for the message broker (used to retrieve API key from Secrets Manager).
+        message_broker_id (str): Id for the message broker to find API key from Secrets Manager.
         from_date (str, optional): Start date for the search in 'YYYY/MM/DD' format. Defaults to None.
 
     Returns:
-        dict: Parsed JSON response from the Guardian API containing article data.
+        dict: Parsed JSON response from API containing article data.
     """
 
     api_key = retrieve_api_key(message_broker_id)
