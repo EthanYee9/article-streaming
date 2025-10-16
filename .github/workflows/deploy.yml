@@ -31,7 +31,7 @@ jobs:
           pip-audit || true
 
       # run test 
-      - name: Run checks
+      - name: Run Tests
         run: pytest --testdox tests/*
         env:
           PYTHONPATH: ${{ github.workspace }}
