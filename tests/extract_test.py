@@ -2,6 +2,7 @@ import pytest
 import datetime
 import json
 from unittest.mock import patch, MagicMock
+from tests.data.extract_test_data import extract_fake_data
 from src.streaming_script import get_search_params, guardian_api_call, retrieve_api_key
 
 
@@ -39,29 +40,7 @@ def mock_api_response():
         "api-key": "test",
     }
 
-    fake_data = {
-        "response": {
-            "status": "ok",
-            "results": [
-                {
-                    "id": "technology/2025/sep/16/how-ai-is-undermining-learning-and-teaching-in-universities",
-                    "type": "article",
-                    "sectionId": "technology",
-                    "sectionName": "Technology",
-                    "webPublicationDate": "2025-09-16T16:22:48Z",
-                    "webTitle": "How AI is undermining learning and teaching in universities | Letter",
-                    "webUrl": "https://www.theguardian.com/technology/2025/sep/16/how-ai-is-undermining-learning-and-teaching-in-universities",
-                    "apiUrl": "https://content.guardianapis.com/technology/2025/sep/16/how-ai-is-undermining-learning-and-teaching-in-universities",
-                    "fields": {
-                        "body": '<p>In discussing generative artificial intelligence (<a href="https://www.theguardian.com/education/2025/sep/13/its-going-to-be-a-life-skill-educators-discuss-the-impact-of-ai-on-university-education">\u2018It\u2019s going to be a life skill\u2019: educators discuss the impact of AI on university education, 13 September</a>) you appear to underestimate the challenges that large language model (LLM) tools such as ChatGPT present to higher education. </p>'
-                    },
-                    "isHosted": False,
-                    "pillarId": "pillar/news",
-                    "pillarName": "News",
-                }
-            ],
-        }
-    }
+    fake_data = extract_fake_data()
 
     with patch("src.streaming_script.requests.get") as mock_get:
         mock_response = MagicMock()
@@ -82,11 +61,10 @@ class TestGuardianApiCall:
         assert len(result["response"]["results"]) > 0
 
     def test_requests_called_with_correct_params(self, mock_api_response):
+        url = "https://content.guardianapis.com/search"
         search_dict, mock_get = mock_api_response
         guardian_api_call(search_dict)
-        mock_get.assert_called_once_with(
-            "https://content.guardianapis.com/search", params=search_dict, timeout=10
-        )
+        mock_get.assert_called_once_with(url, params=search_dict, timeout=10)
 
     def test_check_result_fields_data_type(self, mock_api_response):
         search_dict, mock_get = mock_api_response
